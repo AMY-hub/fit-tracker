@@ -1,4 +1,5 @@
 name: Deployment
+environment: production
 on:
   workflow_dispatch:
     inputs:
