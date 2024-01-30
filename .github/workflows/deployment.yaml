@@ -1,0 +1,45 @@
+name: Deployment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Select deployment environment
+        required: true
+        options:
+        - test
+        - prod
+        - demo
+
+jobs:
+  deploy-landing:
+    if: ${{ inputs.project == 'landing' ||  inputs.project == 'all'}}
+    env:
+      INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Catch deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+      - name: install dependencies
+        run: yarn install
+
+      - name: Create env file
+        run: |
+          {
+            echo '  NEXT_PUBLIC_BOT_TOKEN=${{ secrets.TEST_NEXT_PUBLIC_BOT_TOKEN }}'
+            echo '  NEXT_PUBLIC_TG_CHANNEL_ID=${{ secrets[env.NEXT_PUBLIC_TG_CHANNEL_ID] }}'
+            echo '  NEXT_PUBLIC_PERSONAL_URL=${{ vars[env.NEXT_PUBLIC_PERSONAL_URL] }}'
+            echo '  NEXT_PUBLIC_EMAIL=${{ vars.NEXT_PUBLIC_EMAIL }}'
+            echo '  NEXT_PUBLIC_URL=${{ vars.NEXT_PUBLIC_URL}}'
+          } >> apps/landing/.env
+          cat apps/landing/.env
+
+      - name: Build 
+        run: yarn build

@@ -1,0 +1,45 @@
+name: Testing
+on: pull_request
+env:
+  INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      app-changed: ${{ steps.filter.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+
+        with:
+          list-files: shell
+          filters: |
+            app:
+              - 'src/**'
+
+  lint:
+    needs: paths-filter
+    if: ${{ needs.paths-filter.outputs.changed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Catch deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+      - name: install dependencies
+        run: |
+          yarn install
+          yarn add -D cypress
+          
+      - name: run lint
+        run: yarn lint
+      - name: run build 
+        run: yarn build
