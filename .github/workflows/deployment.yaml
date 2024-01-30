@@ -1,20 +1,10 @@
 name: Deployment
-environment: production
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        type: choice
-        description: Select deployment environment
-        required: true
-        options:
-        - test
-        - prod
-        - demo
+  workflow_dispatch
 
 jobs:
   deploy-landing:
-    if: ${{ inputs.project == 'landing' ||  inputs.project == 'all'}}
+    environment: production
     env:
       INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
