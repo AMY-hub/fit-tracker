@@ -7,24 +7,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  paths-filter:
-    runs-on: ubuntu-latest
-    outputs:
-      app-changed: ${{ steps.filter.outputs.changed }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
-        id: filter
-
-        with:
-          list-files: shell
-          filters: |
-            app:
-              - 'src/**'
-
   lint:
-    needs: paths-filter
-    if: ${{ needs.paths-filter.outputs.changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
