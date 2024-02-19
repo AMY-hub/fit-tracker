@@ -1,3 +1,80 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "next",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+    "jsx": true
+  },
+  "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "simple-import-sort",
+    "unused-imports"
+  ],
+  "root": true,
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/await-thenable": "error",
+    "semi": "off",
+    "@typescript-eslint/semi": "error",
+    "indent": "off",
+    "@typescript-eslint/indent": "error",
+    "space-before-blocks": "off",
+    "@typescript-eslint/space-before-blocks": "error",
+    "space-before-function-paren": "off",
+    "@typescript-eslint/space-before-function-paren": "error",
+    "space-infix-ops": "off",
+    "@typescript-eslint/space-infix-ops": "error",
+    "no-multi-spaces": "error",
+    "space-in-parens": "error",
+    "no-multiple-empty-lines": "error",
+    "prefer-const": "error",
+    "simple-import-sort/imports": "warn",
+    "unused-imports/no-unused-imports": "error",
+    "react/no-unescaped-entities": "off",
+    "prefer-rest-params": "warn"
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx",
+        "*.js",
+        "*.jsx"
+      ],
+      "rules": {
+        "simple-import-sort/imports": [
+          "error",
+          {
+            "groups": [
+              [
+                "^react",
+                "^next"
+              ],
+              [
+                "^(@app)(/.*|$)",
+                "^(@pages)(/.*|$)",
+                "^(@widgets)(/.*|$)",
+                "^(@features)(/.*|$)",
+                "^(@entities)(/.*|$)",
+                "^(@shared)(/.*|$)"
+              ],
+              [
+                "^.+\\.?(scss)|(css)$"
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "ignorePatterns": ["public", "node_modules", ".next", "next.config.js", "jest.config.js"]
 }
